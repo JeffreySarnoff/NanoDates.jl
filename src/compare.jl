@@ -53,14 +53,18 @@ for (T) in (:DateTime, :Date)
   end
 end
 
-for i in 1:Nperiods
-  Base.isequal(::Type{AllPeriodsDecreasing[i]}, ::Type{AllPeriodsDecreasing[i]}) = true
-  Base.isless(::Type{AllPeriodsDecreasing[i]}, ::Type{AllPeriodsDecreasing[i]}) = false
-  for k in i+1:Nperiods
-    Base.isequal(::Type{AllPeriodsDecreasing[i]}, ::Type{AllPeriodsDecreasing[k]}) = false
-    Base.isequal(::Type{AllPeriodsDecreasing[k]}, ::Type{AllPeriodsDecreasing[i]}) = false
-    Base.isless(::Type{AllPeriodsDecreasing[i]}, ::Type{AllPeriodsDecreasing[k]}) = false
-    Base.isless(::Type{AllPeriodsDecreasing[k]}, ::Type{AllPeriodsDecreasing[i]}) = true
-  end
+const AllPeriods = (:Nanosecond, :Microsecond, :Millisecond, :Second, :Minute, :Hour, :Day, :Week, :Month, :Quarter, :Year)
+
+for P in AllPeriods
+    @eval Base.isless(::Type{$P}, ::Type{$P}) = false
 end
 
+# allow period type relative duration determination
+for shortidx in 1:length(AllPeriods)-1
+    short = AllPeriods[shortidx]
+    for longidx in shortidx+1:length(AllPeriods)
+        long = AllPeriods[longidx]
+        @eval Base.isless(::Type{$short}, ::Type{$long}) = true
+        @eval Base.isless(::Type{$long}, ::Type{$short}) = false
+    end
+end

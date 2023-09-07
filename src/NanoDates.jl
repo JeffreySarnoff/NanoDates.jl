@@ -48,6 +48,8 @@ include("validargs.jl")
 include("timestamp.jl")
 include("io.jl")
 include("ndnow.jl")
+include("convertperiods.jl")
+include("ranges.jl")
 
 function __init__()
     reset_timekeeping()

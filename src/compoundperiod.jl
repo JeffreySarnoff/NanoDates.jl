@@ -34,30 +34,38 @@ for (P,p) in ((:Year, :year),
     end
 end
 
-function canonicalized(x::CompoundPeriod)
-   c = canonicalize(x)
-   if !iszero(Dates.quarter(x))
-       q = Quarter(c)
-       c -= q
-       c += convert(Month, q)
-   end
-   if !iszero(Dates.week(x))
-       w = Week(x)
-       c -= w
-       c += convert(Day, w)
-   end
-   c
-end
-   
 function canonical(x::CompoundPeriod)
-    c = canonicalized(x)
-    canonicalized(c)
+    isempty(x) && return x
+    y = canonicalize(x)
+    isone(length(y.periods)) && return y.periods[1]
+    if !iszero(Dates.quarter(y))
+       q = Quarter(y)
+       y -= q
+       y += convert(Month, q)
+   end
+   if !iszero(Dates.week(y))
+       w = Week(y)
+       y -= w
+       y += convert(Day, y)
+   end
+   y
 end
 
 function canonical(x::Period)
+    iszero(x) && return x
     y = canonicalize(x)
-    if length(y.periods) == 1 return x end
-    canonicalized(y)
+    isone(length(y.periods)) && return y.periods[1]
+    if !iszero(Dates.quarter(y))
+       q = Quarter(y)
+       y -= q
+       y += convert(Month, q)
+    end
+    if !iszero(Dates.week(y))
+       w = Week(y)
+       y -= w
+       y += convert(Day, y)
+    end
+    y
 end
 
 # trunc a compoundperiod and cnurt

@@ -2,12 +2,12 @@ const NanosAtStart = time_ns()
 @inline nanos_elapsed() = reinterpret(Int64, time_ns() - NanosAtStart)
 
 
-UTC0 = NanoDate(now(UTC))
-LOCAL0 = NanoDate(now())
-NANOS0 = time_ns()
+UTC0::NanoDate = NanoDate(now(UTC))
+LOCAL0::NanoDate = NanoDate(now())
+NANOS0::UInt64 = time_ns()
 
-NSkeep = zero(UInt64)
-NSincr = zero(UInt16)
+NSkeep::UInt64 = zero(UInt64)
+NSincr::UInt16 = zero(UInt16)
 
 function reset_timekeeping()
     global UTC0, LOCAL0, NANOS0, NSkeep, NSincr

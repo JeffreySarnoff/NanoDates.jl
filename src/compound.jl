@@ -1,3 +1,4 @@
+Base.isone(x::Dates.Period) = isone(Dates.value(x))
 Base.iszero(x::Dates.CompoundPeriod) = isempty(x)
 
 const DatePeriod0 = Period[Year(0), Month(0), Day(0)]
@@ -208,8 +209,8 @@ end
 Base.length(cperiod::CompoundPeriod) = length(cperiod.periods)
 
 # reverse to process smaller period types before larger period types
-Base.iterate(cperiod::CompoundPeriod) = iterate(reverse(cperiod.periods))
-Base.iterate(cperiod::CompoundPeriod, state) = iterate(reverse(cperiod.periods), state)
+Base.iterate(cperiod::CompoundPeriod) = Base.iterate(reverse(cperiod.periods))
+Base.iterate(cperiod::CompoundPeriod, state) = Base.iterate(reverse(cperiod.periods), state)
 
 function Base.:(+)(nd::NanoDate, cperiod::CompoundPeriod)
     for p in cperiod
